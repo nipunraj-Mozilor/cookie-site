@@ -43,5 +43,56 @@
     <div>
       <h2>Hello world</h2>
     </div>
+    <div id="wkda-funnel-container"></div>
+    <script src="https://static.wirkaufendeinauto.de/wkda-frontend/partner-funnel-ifram
+e-manager/index.latest.js"></script>
+    <script>
+      // globally defined function to check cookie consent
+      // (must at least return ['essential'] for widget to work)
+      window.gdprConsent = function () {
+        const cookies = document.cookie.split(";").reduce(function (acc, curr) {
+          const splitted = curr.split("=");
+          const key = splitted[0];
+          const value = splitted[1];
+          acc[key.trim()] = value.trim();
+          return acc;
+        }, {});
+        const ckyCookies = {};
+        const cookieKeys = Object.keys(cookies);
+        for (let i = 0; i < cookieKeys.length; i++) {
+          const key = cookieKeys[i];
+          if (key.indexOf("cookielawinfo-checkbox") !== -1) {
+            ckyCookies[key] = cookies[key];
+          }
+        }
+        const cookieMap = {
+          necessary: "essential",
+          advertisement: "marketing",
+          analytics: "analytics",
+          functional: "functional",
+          others: "others",
+          performance: "performance",
+        };
+        const result = [];
+        const ckyCookiesKeys = Object.keys(ckyCookies);
+        for (let i = 0; i < ckyCookiesKeys.length; i++) {
+          const cookie = ckyCookiesKeys[i];
+          if (ckyCookies[cookie] === "yes") {
+            result.push(
+              cookieMap[cookie.replace("cookielawinfo-checkbox-", "")]
+            );
+          }
+        }
+        return result;
+      };
+      (function () {
+        document.onreadystatechange = function () {
+          if (document.readyState === "complete") {
+            var apiKey = "wl-partner-002-external-nl-prod-af2d299a03ca41ec";
+            WkdaPartner.init(apiKey, { locale: "nl-NL" });
+          }
+        };
+      })();
+    </script>
   </body>
 </html>
